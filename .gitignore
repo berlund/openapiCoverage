@@ -1,0 +1,6 @@
+node_modules
+coverage_output.html
+coverage.json
+openapi.yaml
+src/index.test.ts
+**/*.js
