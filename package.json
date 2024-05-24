@@ -1,11 +1,12 @@
 {
-  "name": "openapicoverage",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@berlund/openapicoverage",
+  "version": "0.0.1",
+  "description": "A simple tool for measuring test coverage on OpenApi specifications",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build tsconfig.json"
   },
-  "author": "",
+  "author": "Lars Engel",
   "license": "ISC",
   "main": "dist/index.js",
   "exports": {
