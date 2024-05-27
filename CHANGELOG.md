@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.5] - 2024-05-27
+
 ### Fixed
 - Support use cases where Axios client was configured with a baseURL
 
