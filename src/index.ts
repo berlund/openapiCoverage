@@ -1,4 +1,4 @@
 import { OpenApiCoverage } from "./OpenApiCoverage"
-import { Options, ReportOptions } from './CoverageModel';
+import { Options, ReportOptions, ApiOptions } from './CoverageModel';
 
-export { OpenApiCoverage, Options, ReportOptions }
+export { OpenApiCoverage, Options, ReportOptions, ApiOptions }

@@ -1,14 +1,12 @@
 import { AxiosError, AxiosInstance } from 'axios';
-import CoverageModel, { Options, ReportOptions } from './CoverageModel';
+import CoverageModel, { ApiOptions, Options, ReportOptions } from './CoverageModel';
 
 export class OpenApiCoverage {
-  private axiosInstance: AxiosInstance;
   private coverageModel: CoverageModel;
 
   private constructor(axiosInstance: AxiosInstance, options?: Options) {
-    this.axiosInstance = axiosInstance;
     this.coverageModel = new CoverageModel(options);
-    this.registerInterceptor();
+    this.registerInterceptor(axiosInstance);
   }
 
   /**
@@ -25,12 +23,24 @@ export class OpenApiCoverage {
   }
 
   /**
+   * Use the given Axios instance to measure coverage.
+   *
+   * @param {AxiosInstance} axiosInstance an Axios instance
+   * @return {*} an instance of OpenApiCoverage
+   * @memberof OpenApiCoverage
+   */
+    use(axiosInstance: AxiosInstance){
+      this.registerInterceptor(axiosInstance);
+      return this;
+    }
+
+  /**
    * Use a given specification for measuring coverage
    * @param specPath the file path to an Open API specification document in YAML.
    * @returns 
    */
-  withSpecificationFromFile(specPath: string){
-    this.coverageModel.registerSpecFromYaml(specPath);
+  withSpecificationFromFile(specPath: string, options?: ApiOptions){
+    this.coverageModel.registerSpecFromYaml(specPath, options);
     return this;
   }
 
@@ -42,8 +52,8 @@ export class OpenApiCoverage {
     this.coverageModel.printCoverage(options);
   }
 
-  private registerInterceptor(): void {
-    this.axiosInstance.interceptors.response.use((response) => {
+  private registerInterceptor(axiosInstance: AxiosInstance): void {
+    axiosInstance.interceptors.response.use((response) => {
       this.coverageModel.handleResponse(response);
       return response;
     },

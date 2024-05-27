@@ -29,6 +29,21 @@ Run your tests as usual, e.g.
       await axiosInstance.post('https://example.com/path/to/post', {data: 'foo'});
   })
 ```
+### Multiple Axios instances
+
+Multiple Axios instances can be chained:
+
+```js
+OpenApiCoverage.use(firstAxiosInstance).use(anotherAxiosInstance)
+```
+
+### Options for API definition
+
+In case the path of your API calls isn't entirely defined in the API's paths but in the base path of your specification, a path prefix is accepted:
+
+```js
+.withSpecification(path, { pathPrefix: '/v1' })
+```
 
 ### Report generation
 

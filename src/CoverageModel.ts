@@ -27,6 +27,15 @@ export type ReportOptions = {
   showZeroCounts: boolean;
 }
 
+/**
+ * OpenApi Coverage options for the specification to use
+ * @typedef {Object} ReportOptions
+ * @property {string} pathPrefix - Include a path prefix when matching API calls agains the specification. Useful when the beginning of path is contained in the server, not in the path's element.
+ */
+export type ApiOptions = {
+  pathPrefix?: string
+}
+
 interface OpenApiPath {
   [method: string]: {
     responses: { [status: string]: number }
@@ -71,21 +80,23 @@ class CoverageModel {
    * @param {string} specPath the path to the yaml file
    * @memberof OpenApiCoverage
    */
-  public registerSpecFromYaml(specPath: string): void {
+  public registerSpecFromYaml(specPath: string, options?: ApiOptions): void {
     const yamlDoc = fs.readFileSync(specPath, 'utf-8');
     const spec = yaml.load(yamlDoc);
     this.specs.push(spec as OpenApiSpec);
-    this.initializeCoverage(spec as OpenApiSpec);
+    this.initializeCoverage(spec as OpenApiSpec, options);
   }
 
 
-  private initializeCoverage(spec: OpenApiSpec): void {
+  private initializeCoverage(spec: OpenApiSpec, options?: ApiOptions): void {
+
+    const { pathPrefix = '' } = options ?? {};
     for (const [path, pathEntry] of Object.entries(spec.paths)) {
 
       if (path === '/{proxy+}') {
         continue;
       }
-      const regex = this.pathToRegex(path);
+      const regex = this.pathToRegex(pathPrefix + path);
       this.pathRegexList.push({ regex, path });
       if (!this.coverage[path]) {
         this.coverage[path] = {};
@@ -119,11 +130,11 @@ class CoverageModel {
     return null;
   }
 
-  private debug(msg: string, data?: object|number|string){
-    if(!this.debugEnabled) return;
-    
+  private debug(msg: string, data?: object | number | string) {
+    if (!this.debugEnabled) return;
+
     let dataString;
-    if(data instanceof Object){
+    if (data instanceof Object) {
       dataString = JSON.stringify(data)
     } else {
       dataString = data;
@@ -132,11 +143,11 @@ class CoverageModel {
   }
 
   public async handleResponse(response: AxiosResponse): Promise<void> {
-    const { method, url } = response.config;
+    const { method, url, baseURL } = response.config;
     const status = response.status.toString();
-    this.debug('handle response', response.status)
+    this.debug('handle response', { method, url, baseURL })
 
-    const normalizedPath = this.normalizePath(url!);
+    const normalizedPath = this.normalizePath(url, baseURL);
     const normalizedMethod = method!.toLowerCase();
     const matchedPath = this.matchPath(normalizedPath);
 
@@ -160,8 +171,13 @@ class CoverageModel {
 
   }
 
-  private normalizePath(path: string): string {
-    const url = new URL(path);
+  private normalizePath(path?: string, baseURL?: string): string {
+    const effectiveURL = baseURL ? `${baseURL}${path}` : path;
+    if (!effectiveURL) {
+      throw new Error('Response without url')
+    }
+
+    const url = new URL(effectiveURL);
     return url.pathname;
   }
 
@@ -192,7 +208,7 @@ class CoverageModel {
     });
   }
 
-  private generateCoverageTable({ showZeroCounts}: ReportOptions): string {
+  private generateCoverageTable({ showZeroCounts }: ReportOptions): string {
 
     const data = [['Path', 'Method', 'Status', 'Count']];
 
@@ -234,7 +250,7 @@ class CoverageModel {
    * @memberof OpenApiCoverage
    */
   public printCoverage(reportOptions?: ReportOptions): void {
-    const options = reportOptions || {showZeroCounts: false};
+    const options = reportOptions || { showZeroCounts: false };
     const output = this.generateCoverageTable(options);
     console.log(output);
   }
