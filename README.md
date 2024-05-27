@@ -14,7 +14,7 @@ Just import the Code coverage class and hand over your Axios instance to it. The
 
 ```js
 const axios = require('axios');
-const {OpenApiCoverage} = require('@berlund/openapicoverage');
+const { OpenApiCoverage } = require('@berlund/openapicoverage');
 
 const axiosInstance = axios.create();
 const coverage = OpenApiCoverage.use(axiosInstance).withSpecificationFromFile('./openapi.yaml');
@@ -56,7 +56,7 @@ This will result in something like the following.
 The following options will output all combinations of path, method and response status, even if they haven't been called:
 
 ```js
-coverage.printCoverage({showZeroCounts: true})`
+coverage.printCoverage({ showZeroCounts: true })
 ```
 
 #### File report
