@@ -1,6 +1,6 @@
 {
   "name": "@berlund/openapicoverage",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A simple tool for measuring test coverage on OpenApi specifications",
   "scripts": {
     "test": "echo \"No test specified, this is fine.\" && exit 0",
