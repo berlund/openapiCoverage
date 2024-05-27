@@ -6,7 +6,7 @@ import { table } from 'table';
 
 
 /**
- * OpenApi Coverage options
+ * OpenApi Coverage options for controlling the output of the coverage report to a file.
  * @typedef {Object} Options
  * @property {string} outputFormat - The output format for coverage reports written to a file. No file will be generated if set to 'none' (default)
  * @property {string} outputPath - The path where to write coverage report files to. Will default to the current working directory§

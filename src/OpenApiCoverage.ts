@@ -11,15 +11,33 @@ export class OpenApiCoverage {
     this.registerInterceptor();
   }
 
+  /**
+   * Use the given Axios instance to measure coverage.
+   *
+   * @static
+   * @param {AxiosInstance} axiosInstance an Axios instance
+   * @param {Options} [options] options for controlling coverage report output
+   * @return {*} an instance of OpenApiCoverage
+   * @memberof OpenApiCoverage
+   */
   static use(axiosInstance: AxiosInstance, options?: Options){
     return new OpenApiCoverage(axiosInstance, options);
   }
 
+  /**
+   * Use a given specification for measuring coverage
+   * @param specPath the file path to an Open API specification document in YAML.
+   * @returns 
+   */
   withSpecificationFromFile(specPath: string){
     this.coverageModel.registerSpecFromYaml(specPath);
     return this;
   }
 
+  /**
+   * Prints a coverage report to the console
+   * @param options The report options
+   */
   printCoverage(options?: ReportOptions){
     this.coverageModel.printCoverage(options);
   }
