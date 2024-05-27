@@ -6,9 +6,22 @@
     "test": "echo \"No test specified, this is fine.\" && exit 0",
     "build": "tsc --build tsconfig.json"
   },
-  "author": "Lars Engel",
-  "license": "ISC",
+  "author": "Lars Engel, [berlund](https://github.com/berlund)",
+  "keywords": ["test", "coverage", "nodejs", "node", "openapi", "swagger"],
+  "license": "MIT",
   "main": "dist/index.js",
+  "engines": {
+
+    "node": ">=18.0.0"
+
+  },
+  "repository": {
+
+    "type": "git",
+
+    "url": "https://github.com/berlund/purge"
+
+  },
   "exports": {
     ".": {
       "require": "./dist/index.js",
